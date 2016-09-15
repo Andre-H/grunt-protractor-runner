@@ -42,6 +42,11 @@ module.exports = function(grunt) {
       opts.configFile = this.data.configFile;
     }
 
+    // suite may or may not to be in options{} object, and can be overriden if passed through the command line.
+    if (!grunt.util._.isUndefined(this.data.suite)) {
+      opts.suite = this.data.suite;
+    }
+
     grunt.verbose.writeln("Options: " + util.inspect(opts));
 
     var keepAlive = opts['keepAlive'];
@@ -78,6 +83,11 @@ module.exports = function(grunt) {
         args.push('--'+a);
       }
     });
+
+    //Adds the suite configuration from opts if it hasn't been added by command line arguments
+    if (!grunt.util._.isUndefined(opts.suite) && !('suite' in opts.args || grunt.option('suite'))){
+      args.push('--suite', opts.suite);
+    }
 
     // Convert [object] to --[object].key1 val1 --[object].key2 val2 ....
     objectArgs.forEach(function(a) {
